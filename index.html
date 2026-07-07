@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>הצעת מחיר · seai</title>
+<style>
+  :root{--accent:#F97316;--accent2:#E25E0B;--ink:#222228;--muted:#5E5F6C;--line:#ECECF3;--canvas:#F4F4F7;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--canvas);color:var(--ink);
+    font-family:-apple-system,"Segoe UI","Heebo","Assistant",Arial,sans-serif;line-height:1.6}
+  .brand{text-align:center;font-weight:800;font-size:1.3rem;padding:24px 0 8px}
+  .brand span{color:var(--accent)}
+  .card{max-width:560px;margin:8px auto 24px;background:#fff;border:1px solid var(--line);
+    border-radius:18px;padding:24px;box-shadow:0 10px 30px rgba(0,0,0,.04)}
+  h1{font-size:1.4rem;margin:0 0 4px}
+  .meta{color:var(--muted);font-size:.9rem;margin-bottom:12px}
+  table{width:100%;border-collapse:collapse;margin:14px 0}
+  th{text-align:start;color:var(--muted);font-size:.8rem;font-weight:600;padding:6px 8px;border-bottom:1px solid var(--line)}
+  td{padding:10px 8px;border-bottom:1px solid var(--line);font-size:.95rem;vertical-align:top}
+  td.qty{text-align:center;color:var(--muted);width:60px}
+  td.amt{text-align:start;white-space:nowrap;font-weight:600;width:120px}
+  td.empty{text-align:center;color:var(--muted)}
+  .total{display:flex;justify-content:space-between;align-items:center;margin-top:14px;
+    padding-top:14px;border-top:2px solid var(--line)}
+  .total strong{font-size:1.5rem;color:var(--accent)}
+  .notes{margin-top:14px;color:var(--muted);font-size:.9rem;white-space:pre-wrap}
+  .accept{margin-top:22px;display:flex;flex-direction:column;gap:10px}
+  .namelabel{display:flex;flex-direction:column;gap:6px;font-size:.85rem;color:var(--muted)}
+  .namelabel input{padding:12px;border:1px solid var(--line);border-radius:12px;font-size:1rem}
+  button.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:0;
+    padding:15px;border-radius:14px;font-size:1.05rem;font-weight:700;cursor:pointer;
+    box-shadow:0 8px 20px rgba(249,115,22,.3)}
+  button.primary:disabled{opacity:.6}
+  .fineprint{color:var(--muted);font-size:.75rem;text-align:center;margin:2px 0 0}
+  .banner{padding:12px 14px;border-radius:12px;margin:12px 0;font-weight:600;font-size:.95rem}
+  .banner.ok{background:#E4F7F1;color:#0A7A63}
+  .banner.warn{background:#FBF1DF;color:#8A5A00}
+  .footer{text-align:center;color:#86868B;font-size:.8rem;padding-bottom:32px}
+  .loading{text-align:center;color:var(--muted);padding:20px}
+</style>
+</head>
+<body>
+  <div class="brand">seai <span>projects</span></div>
+  <div id="root" class="card"><div class="loading">טוען…</div></div>
+  <div class="footer">seai · הצעת מחיר מאובטחת</div>
+
+<script>
+const FUNCTION_URL = "https://puvtgnhrilyabqgtwnmg.supabase.co/functions/v1/quote-public";
+const ILS = new Intl.NumberFormat("he-IL", { style: "currency", currency: "ILS" });
+const money = a => ILS.format((a || 0) / 100);
+const esc = s => (s ?? "").toString().replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const token = new URLSearchParams(location.search).get("token");
+const root = document.getElementById("root");
+
+function errorCard(msg){ root.innerHTML = '<div class="banner warn">'+esc(msg)+'</div>'; }
+
+function render(data){
+  const q = data.quote;
+  const rows = (data.items||[]).map(it =>
+    '<tr><td class="desc">'+esc(it.description||"—")+'</td><td class="qty">'+(it.quantity??1)+'</td><td class="amt">'+money(it.line_total_agorot)+'</td></tr>'
+  ).join("");
+  let banner = "";
+  if (data.accepted) banner = '<div class="banner ok">ההצעה אושרה. תודה! 🎉</div>';
+  else if (data.rejected) banner = '<div class="banner warn">ההצעה סומנה כנדחתה.</div>';
+  else if (data.expired) banner = '<div class="banner warn">תוקף ההצעה פג. פנו אלינו להצעה מעודכנת.</div>';
+  const canAccept = !data.accepted && !data.expired && !data.rejected;
+  const validUntil = q.valid_until ? '<div class="meta">בתוקף עד '+new Date(q.valid_until).toLocaleDateString("he-IL")+'</div>' : "";
+  const acceptForm = canAccept ? (
+    '<div class="accept">'+
+      '<label class="namelabel">שם מלא (לאישור)<input id="name" type="text" placeholder="השם שלך" autocomplete="name" /></label>'+
+      '<button class="primary" id="acceptBtn" onclick="accept()">אישור וקבלת ההצעה</button>'+
+      '<p class="fineprint">בלחיצה על "אישור" את/ה מאשר/ת את תנאי הצעת המחיר.</p>'+
+    '</div>') : "";
+  root.innerHTML =
+    '<h1>'+esc(q.title || "הצעת מחיר")+'</h1>'+ validUntil + banner +
+    '<table><thead><tr><th>פירוט</th><th>כמות</th><th>סכום</th></tr></thead><tbody>'+
+      (rows || '<tr><td colspan="3" class="empty">אין שורות</td></tr>')+
+    '</tbody></table>'+
+    '<div class="total"><span>סה״כ לתשלום</span><strong>'+money(q.total_agorot)+'</strong></div>'+
+    (q.notes ? '<div class="notes">'+esc(q.notes)+'</div>' : "")+
+    acceptForm;
+}
+
+async function accept(){
+  const btn = document.getElementById("acceptBtn");
+  const name = (document.getElementById("name")||{}).value || "";
+  btn.disabled = true; btn.textContent = "שולח…";
+  try{
+    const res = await fetch(FUNCTION_URL, {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({ token, name })
+    });
+    const data = await res.json();
+    if (data.ok && data.accepted){ load(true); }
+    else { btn.disabled=false; btn.textContent="אישור וקבלת ההצעה"; alert("האישור נכשל. נסו שוב."); }
+  }catch(e){ btn.disabled=false; btn.textContent="אישור וקבלת ההצעה"; alert("שגיאת רשת. נסו שוב."); }
+}
+
+async function load(justAccepted){
+  if (!token){ errorCard("קישור לא תקין"); return; }
+  try{
+    const res = await fetch(FUNCTION_URL + "?token=" + encodeURIComponent(token));
+    const data = await res.json();
+    if (!data.ok){
+      errorCard(data.error === "not_found" ? "ההצעה לא נמצאה" : "קישור לא תקין");
+      return;
+    }
+    if (justAccepted) data.accepted = true;
+    render(data);
+  }catch(e){ errorCard("אירעה שגיאה. נסו שוב מאוחר יותר."); }
+}
+load(false);
+</script>
+</body>
+</html>
