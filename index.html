@@ -43,6 +43,9 @@
   .summary-row.total{border-top:1px solid #e5e7eb;margin-top:8px;padding-top:14px;font-size:18px;font-weight:700;color:#1a1a2e}
   .summary-row.total .v{color:#F97316}
   .notes-text{font-size:13px;line-height:1.9;color:#374151;white-space:pre-line}
+  .nt-h{font-weight:700;color:#1a1a2e;font-size:14px;margin:16px 0 6px}
+  .nt-h:first-child{margin-top:0}
+  .nt-l{font-size:13px;line-height:1.85;color:#374151}
   .meta{color:rgba(255,255,255,.6);font-size:12px;margin-top:6px}
   .accept-box{margin-top:30px;background:#fff7ed;border:1px solid #fed7aa;border-radius:14px;padding:22px}
   .name-input{width:100%;padding:13px 16px;border:1px solid #e5e7eb;border-radius:10px;font-size:15px;font-family:inherit;margin-bottom:12px}
@@ -66,6 +69,16 @@ const esc = s => (s ?? "").toString().replace(/[&<>"']/g, c => ({"&":"&amp;","<"
 const token = new URLSearchParams(location.search).get("token");
 const root = document.getElementById("root");
 
+function formatNotes(text){
+  const kw = ["הערות ותנאים","היקף","לוחות זמנים","תנאי תשלום","אבני דרך","עלויות צד שלישי","עלות חודשית","לתשומת לב","מה כלול","מה לא כלול","אחריות"];
+  return (text||"").replace(/\r/g,"").split("\n").map(function(raw){
+    const line = raw.trim();
+    if(!line) return "";
+    const isHeader = line.endsWith(":") || (line.length < 34 && kw.some(function(k){return line.indexOf(k)===0;}));
+    const clean = line.endsWith(":") ? line.slice(0,-1) : line;
+    return isHeader ? '<div class="nt-h">'+esc(clean)+'</div>' : '<div class="nt-l">'+esc(line)+'</div>';
+  }).join("");
+}
 function shell(inner){
   const today = new Date().toLocaleDateString("he-IL", {day:"numeric",month:"long",year:"numeric"});
   return '<div class="header"><div class="header-top"><img class="logo" src="logo.png" alt="seai" />'+
@@ -97,7 +110,7 @@ function render(data){
     '<div class="fineprint">בלחיצה על "אישור" את/ה מאשר/ת את תנאי הצעת המחיר.</div></div>';
 
   const validUntil = q.valid_until ? '<div class="meta">בתוקף עד '+new Date(q.valid_until).toLocaleDateString("he-IL")+'</div>' : "";
-  const notesBlock = q.notes ? '<div class="section-label">הערות ותנאים</div><div class="notes-text">'+esc(q.notes)+'</div>' : "";
+  const notesBlock = q.notes ? '<div class="section-label">הערות ותנאים</div>'+formatNotes(q.notes) : "";
 
   root.innerHTML = shell(
     '<div class="doc-type">Price Quotation · הצעת מחיר</div>'+
