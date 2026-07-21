@@ -49,6 +49,7 @@
   .feat{padding:10px 0;border-bottom:1px solid #f1f2f4;font-size:14px;line-height:1.6}
   .feat-name{font-weight:700;color:#1a1a2e}
   .feat-desc{color:#6b7280}
+  .intro{font-size:14px;line-height:1.9;color:#374151;margin-bottom:4px}
   .meta{color:rgba(255,255,255,.6);font-size:12px;margin-top:6px}
   .accept-box{margin-top:30px;background:#fff7ed;border:1px solid #fed7aa;border-radius:14px;padding:22px}
   .name-input{width:100%;padding:13px 16px;border:1px solid #e5e7eb;border-radius:10px;font-size:15px;font-family:inherit;margin-bottom:12px}
@@ -74,19 +75,36 @@ const root = document.getElementById("root");
 
 var SECTION_KW = ["הערות ותנאים","היקף","מה כלול","מה לא כלול","לוחות זמנים","תנאי תשלום","אבני דרך","עלויות צד שלישי","עלות חודשית","לתשומת לב","אחריות"];
 function isHeaderLine(l){ return l.endsWith(":") || (l.length < 34 && SECTION_KW.some(function(k){return l.indexOf(k)===0;})); }
-function splitScope(notes){
-  var lines=(notes||"").replace(/\r/g,"").split("\n"), scope=[], rest=[], inScope=false;
+var TERMS_KW = ["הערות ותנאים","לוחות זמנים","תנאי תשלום","אבני דרך","עלויות","לתשומת לב","אחריות","מה לא כלול"];
+function splitAtTerms(notes){
+  var lines=(notes||"").replace(/\r/g,"").split("\n");
   for(var i=0;i<lines.length;i++){
     var line=lines[i].trim();
-    if(!line){ if(!inScope) rest.push(""); continue; }
-    if(isHeaderLine(line)){
-      var clean = line.endsWith(":") ? line.slice(0,-1) : line;
-      if(clean.indexOf("היקף")===0 || clean.indexOf("מה כלול")===0){ inScope=true; continue; }
-      inScope=false; rest.push(lines[i]); continue;
+    if(!isHeaderLine(line)) continue;
+    var clean = line.endsWith(":") ? line.slice(0,-1) : line;
+    if(TERMS_KW.some(function(k){return clean.indexOf(k)===0;})){
+      return { above: lines.slice(0,i).join("\n").trim(), terms: lines.slice(i).join("\n") };
     }
-    if(inScope) scope.push(line); else rest.push(lines[i]);
   }
-  return { scope: scope, rest: rest.join("\n").trim() };
+  return { above:"", terms: notes||"" };
+}
+function renderAbove(text){
+  var lines=(text||"").replace(/\r/g,"").split("\n"), out="", header="", isFeat=false;
+  for(var i=0;i<lines.length;i++){
+    var line=lines[i].trim();
+    if(!line) continue;
+    if(isHeaderLine(line)){
+      header = line.endsWith(":") ? line.slice(0,-1) : line;
+      isFeat = header.indexOf("מה כלול")===0 || header.indexOf("היקף")===0 || header.indexOf("פיצ")>=0;
+      out += '<div class="section-label">'+esc(header)+'</div>'; continue;
+    }
+    if(isFeat){
+      var parts=line.split(" – ");
+      if(parts.length>=2){ out += '<div class="feat"><span class="feat-name">'+esc(parts[0])+'</span> – <span class="feat-desc">'+esc(parts.slice(1).join(" – "))+'</span></div>'; }
+      else { out += '<div class="feat">'+esc(line)+'</div>'; }
+    } else { out += '<div class="intro">'+esc(line)+'</div>'; }
+  }
+  return out;
 }
 function formatNotes(text){
   const kw = ["הערות ותנאים","היקף","לוחות זמנים","תנאי תשלום","אבני דרך","עלויות צד שלישי","עלות חודשית","לתשומת לב","מה כלול","מה לא כלול","אחריות"];
@@ -128,13 +146,9 @@ function render(data){
     '<div class="fineprint">בלחיצה על "אישור" את/ה מאשר/ת את תנאי הצעת המחיר.</div></div>';
 
   const validUntil = q.valid_until ? '<div class="meta">בתוקף עד '+new Date(q.valid_until).toLocaleDateString("he-IL")+'</div>' : "";
-  const split = splitScope(q.notes || "");
-  const scopeBlock = split.scope.length ? ('<div class="section-label">מה כלול</div>' + split.scope.map(function(line){
-    var parts = line.split(" – ");
-    if(parts.length >= 2){ return '<div class="feat"><span class="feat-name">'+esc(parts[0])+'</span> – <span class="feat-desc">'+esc(parts.slice(1).join(" – "))+'</span></div>'; }
-    return '<div class="feat">'+esc(line)+'</div>';
-  }).join("")) : "";
-  const notesBlock = split.rest.trim() ? '<div class="section-label">הערות ותנאים</div>'+formatNotes(split.rest) : "";
+  const split = splitAtTerms(q.notes || "");
+  const scopeBlock = renderAbove(split.above);
+  const notesBlock = split.terms.trim() ? formatNotes(split.terms) : "";
 
   root.innerHTML = shell(
     '<div class="doc-type">Price Quotation · הצעת מחיר</div>'+
