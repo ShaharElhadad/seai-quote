@@ -46,9 +46,13 @@
   .nt-h{font-weight:700;color:#1a1a2e;font-size:14px;margin:16px 0 6px}
   .nt-h:first-child{margin-top:0}
   .nt-l{font-size:13px;line-height:1.85;color:#374151}
-  .feat{padding:10px 0;border-bottom:1px solid #f1f2f4;font-size:14px;line-height:1.6}
-  .feat-name{font-weight:700;color:#1a1a2e}
-  .feat-desc{color:#6b7280}
+  .feature-table{width:100%;border-collapse:collapse;margin-bottom:8px}
+  .feature-table thead tr{border-bottom:2px solid #1a1a2e}
+  .feature-table th{padding:10px 12px;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#6b7280;text-align:right}
+  .feature-table tbody tr{border-bottom:1px solid #f0f0f0}
+  .feature-table tbody tr:last-child{border-bottom:none}
+  .feature-name{padding:13px 12px;font-size:14px;font-weight:600;color:#1a1a2e;width:32%;vertical-align:top}
+  .feature-desc{padding:13px 12px;font-size:14px;color:#374151;line-height:1.7;vertical-align:top}
   .intro{font-size:14px;line-height:1.9;color:#374151;margin-bottom:4px}
   .meta{color:rgba(255,255,255,.6);font-size:12px;margin-top:6px}
   .accept-box{margin-top:30px;background:#fff7ed;border:1px solid #fed7aa;border-radius:14px;padding:22px}
@@ -89,21 +93,34 @@ function splitAtTerms(notes){
   return { above:"", terms: notes||"" };
 }
 function renderAbove(text){
-  var lines=(text||"").replace(/\r/g,"").split("\n"), out="", header="", isFeat=false;
+  var lines=(text||"").replace(/\r/g,"").split("\n"), out="", header="", isFeat=false, buf=[];
+  function flush(){
+    if(!buf.length) return;
+    if(isFeat){
+      out += '<table class="feature-table"><thead><tr><th>פיצ\'ר</th><th>מה זה נותן לך</th></tr></thead><tbody>';
+      buf.forEach(function(line){
+        var parts=line.split(" – ");
+        var name=parts[0], desc=parts.length>=2?parts.slice(1).join(" – "):"";
+        out += '<tr><td class="feature-name">'+esc(name)+'</td><td class="feature-desc">'+esc(desc)+'</td></tr>';
+      });
+      out += '</tbody></table>';
+    } else {
+      buf.forEach(function(line){ out += '<div class="intro">'+esc(line)+'</div>'; });
+    }
+    buf=[];
+  }
   for(var i=0;i<lines.length;i++){
     var line=lines[i].trim();
     if(!line) continue;
     if(isHeaderLine(line)){
+      flush();
       header = line.endsWith(":") ? line.slice(0,-1) : line;
       isFeat = header.indexOf("מה כלול")===0 || header.indexOf("היקף")===0 || header.indexOf("פיצ")>=0;
       out += '<div class="section-label">'+esc(header)+'</div>'; continue;
     }
-    if(isFeat){
-      var parts=line.split(" – ");
-      if(parts.length>=2){ out += '<div class="feat"><span class="feat-name">'+esc(parts[0])+'</span> – <span class="feat-desc">'+esc(parts.slice(1).join(" – "))+'</span></div>'; }
-      else { out += '<div class="feat">'+esc(line)+'</div>'; }
-    } else { out += '<div class="intro">'+esc(line)+'</div>'; }
+    buf.push(line);
   }
+  flush();
   return out;
 }
 function formatNotes(text){
