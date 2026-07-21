@@ -93,10 +93,9 @@ function errorCard(msg){
 function render(data){
   const q = data.quote;
   const rows = (data.items||[]).map(it => {
-    const note = it.notes ? '<div class="cat-note">'+esc(it.notes)+'</div>' : "";
     const qty = Number(it.quantity ?? 1);
-    const detail = (qty && qty !== 1) ? (qty + ' × ' + money(it.unit_price_agorot)) : "";
-    return '<tr><td class="cat-name">'+esc(it.description||"—")+note+'</td><td class="cat-pct">'+detail+'</td><td class="cat-amt">'+money(it.line_total_agorot)+'</td></tr>';
+    const mid = (it.notes && it.notes.trim()) ? it.notes : ((qty && qty !== 1) ? (qty + ' × ' + money(it.unit_price_agorot)) : "");
+    return '<tr><td class="cat-name">'+esc(it.description||"—")+'</td><td class="cat-pct">'+esc(mid)+'</td><td class="cat-amt">'+money(it.line_total_agorot)+'</td></tr>';
   }).join("") || '<tr><td colspan="3" style="text-align:center;color:#9ca3af">אין שורות</td></tr>';
 
   let action = "";
