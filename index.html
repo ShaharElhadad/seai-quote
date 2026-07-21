@@ -10,50 +10,55 @@
   *{margin:0;padding:0;box-sizing:border-box}
   body{font-family:'Heebo',-apple-system,Arial,sans-serif;background:#f5f5f5;color:#1a1a2e;direction:rtl;padding:20px 12px}
   .page{max-width:760px;margin:0 auto;background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.08)}
-  .header{background:#1a1a2e;padding:36px 40px 28px;color:#fff}
-  .header-top{display:flex;justify-content:space-between;align-items:center;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:20px}
-  .brand{font-size:24px;font-weight:700;letter-spacing:.5px}
-  .doc-info-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:3px}
+  .header{background:#1a1a2e;padding:40px 44px 30px;color:#fff}
+  .header-top{display:flex;justify-content:space-between;align-items:center;padding-bottom:26px;border-bottom:1px solid rgba(255,255,255,.12);margin-bottom:26px}
+  .doc-info-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:4px}
   .doc-info-value{font-size:13px;color:rgba(255,255,255,.85);text-align:left}
-  .doc-type{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:8px}
-  .project-title{font-size:26px;font-weight:700;letter-spacing:-.5px}
-  .project-sub{font-size:13px;color:rgba(255,255,255,.5);font-weight:300;margin-top:4px}
-  .logo{height:38px;width:auto;filter:brightness(0) invert(1)}
+  .doc-type{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,.45);margin-bottom:10px}
+  .project-title{font-size:28px;font-weight:700;color:#fff;letter-spacing:-.5px;margin-bottom:4px}
+  .project-sub{font-size:14px;color:rgba(255,255,255,.5);font-weight:300}
+  .logo{height:40px;width:auto;filter:brightness(0) invert(1)}
   .accent-bar{height:4px;background:linear-gradient(90deg,#F97316,#fb923c,transparent)}
-  .signature-section{padding:28px 40px 8px;display:flex;justify-content:flex-start}
-  .signature-box{text-align:center}
-  .signature-label{font-size:12px;color:#9ca3af;margin-bottom:6px}
-  .signature-img{height:40px;width:auto;display:block}
-  .signature-line{width:150px;border-top:1px solid #cbd5e1;margin:4px 0 8px}
-  .signature-name{font-size:15px;font-weight:700;color:#1a1a2e}
-  .signature-title{font-size:11px;color:#9ca3af;letter-spacing:1px;text-transform:uppercase}
-  .body{padding:28px 40px 40px}
-  .section-label{font-size:12px;font-weight:600;letter-spacing:1px;color:#F97316;text-transform:uppercase;margin:24px 0 12px}
-  .section-label:first-child{margin-top:0}
-  table{width:100%;border-collapse:collapse}
-  th{font-size:11px;text-transform:uppercase;letter-spacing:1px;color:#9ca3af;text-align:right;padding:8px 6px;border-bottom:2px solid #eef0f3}
-  th.amt-col{text-align:left}
-  td{padding:12px 6px;border-bottom:1px solid #f1f2f4;font-size:14px;vertical-align:top}
-  .cat-name{font-weight:500;color:#1a1a2e}
-  .cat-note{font-size:12px;color:#6b7280;font-weight:400;margin-top:3px}
-  .cat-pct{color:#6b7280;white-space:nowrap}
-  .cat-amt{text-align:left;white-space:nowrap;font-weight:600}
-  .summary-section{background:#f8f9fb;border-radius:12px;padding:18px 20px;margin-top:8px}
-  .summary-row{display:flex;justify-content:space-between;padding:6px 0;font-size:14px;color:#4b5563}
-  .summary-row.total{border-top:1px solid #e5e7eb;margin-top:8px;padding-top:14px;font-size:18px;font-weight:700;color:#1a1a2e}
-  .summary-row.total .v{color:#F97316}
-  .notes-text{font-size:13px;line-height:1.9;color:#374151;white-space:pre-line}
-  .nt-h{font-weight:700;color:#1a1a2e;font-size:14px;margin:16px 0 6px}
-  .nt-h:first-child{margin-top:0}
-  .nt-l{font-size:13px;line-height:1.85;color:#374151}
-  .feature-table{width:100%;border-collapse:collapse;margin-bottom:8px}
+  .signature-section{padding:8px 44px 8px;display:flex;justify-content:flex-start}
+  .signature-box{min-width:220px}
+  .signature-label{font-size:13px;color:#6b7280;margin-bottom:8px}
+  .signature-img{width:140px;height:auto;display:block;margin-bottom:4px}
+  .signature-line{border-top:1px solid #1a1a2e;width:200px;margin:0 0 6px}
+  .signature-name{font-size:13px;font-weight:600;color:#1a1a2e}
+  .signature-title{font-size:12px;color:#9ca3af;margin-top:2px}
+  .body{padding:36px 44px}
+  .section-label{font-size:10px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:#9ca3af;margin-bottom:16px}
+  .intro-section{margin-bottom:30px}
+  .intro-title{font-size:17px;font-weight:700;color:#1a1a2e;margin-bottom:8px}
+  .intro-text{font-size:14px;color:#374151;line-height:1.8}
+  .feature-table{width:100%;border-collapse:collapse;margin-bottom:30px}
   .feature-table thead tr{border-bottom:2px solid #1a1a2e}
-  .feature-table th{padding:10px 12px;font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#6b7280;text-align:right}
+  .feature-table th{padding:10px 14px;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#6b7280;text-align:right}
   .feature-table tbody tr{border-bottom:1px solid #f0f0f0}
   .feature-table tbody tr:last-child{border-bottom:none}
-  .feature-name{padding:13px 12px;font-size:14px;font-weight:600;color:#1a1a2e;width:32%;vertical-align:top}
-  .feature-desc{padding:13px 12px;font-size:14px;color:#374151;line-height:1.7;vertical-align:top}
-  .intro{font-size:14px;line-height:1.9;color:#374151;margin-bottom:4px}
+  .feature-name{padding:14px;font-size:14px;font-weight:600;color:#1a1a2e;width:30%;vertical-align:top}
+  .feature-desc{padding:14px;font-size:14px;color:#374151;line-height:1.7;vertical-align:top}
+  .cat-table{width:100%;border-collapse:collapse;margin-bottom:30px}
+  .cat-table thead tr{border-bottom:2px solid #1a1a2e}
+  .cat-table th{padding:10px 14px;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:#6b7280;text-align:right}
+  .cat-table th.amt-col{text-align:left}
+  .cat-table th.pct-col{text-align:center}
+  .cat-table tbody tr{border-bottom:1px solid #f0f0f0}
+  .cat-table tbody tr:last-child{border-bottom:none}
+  .cat-name{padding:14px;font-size:15px;font-weight:500;color:#1a1a2e;vertical-align:top}
+  .cat-pct{padding:14px;text-align:center;font-size:14px;color:#6b7280;vertical-align:top;white-space:nowrap}
+  .cat-amt{padding:14px;text-align:left;font-size:15px;font-weight:600;color:#1a1a2e;vertical-align:top;white-space:nowrap}
+  .summary-section{background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden}
+  .summary-row{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;border-bottom:1px solid #e5e7eb}
+  .summary-row:last-child{border-bottom:none}
+  .summary-label{font-size:14px;color:#6b7280}
+  .summary-value{font-size:16px;font-weight:600;color:#1a1a2e}
+  .summary-row.total .summary-label{font-weight:700;color:#1a1a2e;font-size:15px}
+  .summary-row.total .summary-value{color:#F97316;font-size:22px;font-weight:700}
+  .notes-section{margin-top:32px;border-top:1px solid #e5e7eb;padding-top:24px}
+  .nt-h{font-weight:700;color:#1a1a2e;font-size:14px;margin:16px 0 6px}
+  .nt-h:first-child{margin-top:0}
+  .nt-l{font-size:13px;line-height:1.9;color:#6b7280}
   .meta{color:rgba(255,255,255,.6);font-size:12px;margin-top:6px}
   .accept-box{margin-top:30px;background:#fff7ed;border:1px solid #fed7aa;border-radius:14px;padding:22px}
   .name-input{width:100%;padding:13px 16px;border:1px solid #e5e7eb;border-radius:10px;font-size:15px;font-family:inherit;margin-bottom:12px}
@@ -95,8 +100,9 @@ function splitAtTerms(notes){
 function renderAbove(text){
   var lines=(text||"").replace(/\r/g,"").split("\n"), out="", header="", isFeat=false, buf=[];
   function flush(){
-    if(!buf.length) return;
+    if(!header && !buf.length) return;
     if(isFeat){
+      out += '<div class="section-label">'+esc(header)+'</div>';
       out += '<table class="feature-table"><thead><tr><th>פיצ\'ר</th><th>מה זה נותן לך</th></tr></thead><tbody>';
       buf.forEach(function(line){
         var parts=line.split(" – ");
@@ -105,9 +111,10 @@ function renderAbove(text){
       });
       out += '</tbody></table>';
     } else {
-      buf.forEach(function(line){ out += '<div class="intro">'+esc(line)+'</div>'; });
+      var body = buf.map(function(l){return esc(l);}).join("<br>");
+      out += '<div class="intro-section"><div class="intro-title">'+esc(header)+'</div><div class="intro-text">'+body+'</div></div>';
     }
-    buf=[];
+    buf=[]; header="";
   }
   for(var i=0;i<lines.length;i++){
     var line=lines[i].trim();
@@ -116,7 +123,7 @@ function renderAbove(text){
       flush();
       header = line.endsWith(":") ? line.slice(0,-1) : line;
       isFeat = header.indexOf("מה כלול")===0 || header.indexOf("היקף")===0 || header.indexOf("פיצ")>=0;
-      out += '<div class="section-label">'+esc(header)+'</div>'; continue;
+      continue;
     }
     buf.push(line);
   }
@@ -175,14 +182,14 @@ function render(data){
   '<div class="body">'+
     scopeBlock +
     '<div class="section-label">פירוט עלות הקמה</div>'+
-    '<table><thead><tr><th>תיאור</th><th>פירוט</th><th class="amt-col">עלות</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+    '<table class="cat-table"><thead><tr><th>קטגוריה</th><th class="pct-col">אחוז</th><th class="amt-col">עלות</th></tr></thead><tbody>'+rows+'</tbody></table>'+
     '<div class="section-label">סיכום כספי</div>'+
     '<div class="summary-section">'+
-      '<div class="summary-row"><span>סכום ביניים</span><span>'+money(q.subtotal_agorot)+'</span></div>'+
-      '<div class="summary-row"><span>מע"מ</span><span>פטור · עוסק פטור</span></div>'+
-      '<div class="summary-row total"><span>סה"כ לתשלום</span><span class="v">'+money(q.total_agorot)+'</span></div>'+
+      '<div class="summary-row"><span class="summary-label">סה"כ עלות הקמה</span><span class="summary-value">'+money(q.subtotal_agorot)+'</span></div>'+
+      '<div class="summary-row"><span class="summary-label">מע"מ</span><span class="summary-value">פטור · עוסק פטור</span></div>'+
+      '<div class="summary-row total"><span class="summary-label">סה"כ לתשלום (חד פעמי)</span><span class="summary-value">'+money(q.total_agorot)+'</span></div>'+
     '</div>'+
-    notesBlock + action +
+    (notesBlock ? '<div class="notes-section">'+notesBlock+'</div>' : "") + action +
   '</div>'+
   '<div class="signature-section"><div class="signature-box">'+
     '<div class="signature-label">חתימה:</div>'+
